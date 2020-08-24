@@ -1,8 +1,13 @@
 program calculate_bmi
+  ! Simple BMI calculator
   implicit none
   character :: unit_system
   character :: height_unit*15, weight_unit*10
   real :: height, weight, bmi
+  integer :: ierror = 0
+  character(len=100) :: ioerrmsg
+
+
   print *, 'Would you like to use imperial or metric system?'
   systemloop: do
     print *, 'Press [I] for imperal system or press [M] for metric system.'
@@ -20,9 +25,17 @@ program calculate_bmi
   end if
 
   print *, 'Type in your height in ', height_unit
-  read *, height
+  read (*, *, iostat = ierror, iomsg=ioerrmsg) height
+  if (ierror /= 0) then
+    print *, 'Invalid input for height!'
+    call exit
+  end if
   print *, 'Type in your weight in ', weight_unit
-  read *, weight
+  read (*, iostat = ierror, iomsg=ioerrmsg) weight
+  if (ierror /= 0) then
+    print *, 'Invalid input for weight!'
+    call exit
+  end if
 
   if (unit_system == 'i' .or. unit_system == 'I') then
     bmi = 703 * weight / (height**2)
